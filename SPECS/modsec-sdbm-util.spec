@@ -29,7 +29,7 @@ make
 %install
 %{__rm} -rf %{buildroot}
 %make_install
-%{__install} -Dp -m0750 clean_secdatadir %{buildroot}%{_bindir}/clean_secdatadir
+%{__install} -Dp -m0750 $RPM_SOURCE_DIR/clean_secdatadir %{buildroot}%{_bindir}/clean_secdatadir
 
 %post
 /usr/local/cpanel/bin/manage_hooks add script %{_bindir}/clean_secdatadir --category=System --event=upcp --stage=post
@@ -42,6 +42,9 @@ make
 %{_bindir}/modsec-sdbm-util
 
 %changelog
+* Tue Sep 20 2016 Kenneth Power <kenneth.poewr@gmail.com> - 20160915-4
+- Package shipped clean_secdatadir script
+
 * Fri Sep 16 2016 Kenneth Power <kenneth.power@gmail.com> - 20160915-3
 - Removed use of vars in the perl script
 * Fri Sep 16 2016 Kenneth Power <kenneth.power@gmail.com> - 20160915-3
