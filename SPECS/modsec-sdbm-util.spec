@@ -1,7 +1,7 @@
 Name: ea-apache24-modsec-sdbm-util
 Version: 20160915
 Summary: ModSecurity utility to manage the ip.pag file
-%define release_prefix 4
+%define release_prefix 5
 Release: %{release_prefix}%{?dist}.escherlat
 License: Apache License, Version 2.0
 Group: System Environment/Daemons
@@ -22,18 +22,6 @@ Utility to manipulate SDBM files used by ModSecurity. With that utility it is po
 %setup -q -n modsec-sdbm-util
 ./autogen.sh
 
-%{__cat} <<EOF > clean_secdatadir
-#!/usr/local/cpanel/3rdparty/bin/perl
-
-use strict;
-use warnings;
-
-if( -x '/usr/bin/modsec-sdbm-util' ){
-    system( '/usr/bin/modsec-sdbm-util', '-k', '/var/cpanel/secdatadir/ip.pg');
-}
-
-EOF
-
 %build
 %configure --with-apr=/opt/cpanel/ea-apr15 --with-apu=/opt/cpanel/ea-apr15
 make
@@ -41,7 +29,7 @@ make
 %install
 %{__rm} -rf %{buildroot}
 %make_install
-%{__install} -Dp -m0755 clean_secdatadir %{buildroot}%{_bindir}/clean_secdatadir
+%{__install} -Dp -m0750 clean_secdatadir %{buildroot}%{_bindir}/clean_secdatadir
 
 %post
 /usr/local/cpanel/bin/manage_hooks add script %{_bindir}/clean_secdatadir --category=System --event=upcp --stage=post
