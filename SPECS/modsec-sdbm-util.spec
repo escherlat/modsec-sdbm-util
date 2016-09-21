@@ -32,7 +32,13 @@ make
 %{__install} -Dp -m0750 $RPM_SOURCE_DIR/clean_secdatadir %{buildroot}%{_bindir}/clean_secdatadir
 
 %post
-/usr/local/cpanel/bin/manage_hooks add script %{_bindir}/clean_secdatadir --category=System --event=upcp --stage=post
+script_installed=`/usr/local/cpanel/bin/manage_hooks list | grep clean_secdatadir`;
+if [[ ! $script_installed ]]; then
+    /usr/local/cpanel/bin/manage_hooks add script %{_bindir}/clean_secdatadir --category=System --event=upcp --stage=post;
+fi
+
+%postun
+/usr/local/cpanel/bin/manage_hooks del script %{_bindir}/clean_secdatadir --category=System --event=upcp --stage=post
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -44,6 +50,8 @@ make
 %changelog
 * Tue Sep 20 2016 Kenneth Power <kenneth.poewr@gmail.com> - 20160915-4
 - Package shipped clean_secdatadir script
+- Only install hook script if it is not registered
+- Remove hook when uninstalling
 
 * Fri Sep 16 2016 Kenneth Power <kenneth.power@gmail.com> - 20160915-3
 - Removed use of vars in the perl script
